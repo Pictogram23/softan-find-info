@@ -4,7 +4,7 @@
 
 ## 必要なアプリケーション
 
-- Docker
+- Docker(Compose含む)
 
 ## 起動方法
 
@@ -17,6 +17,7 @@
 ## 通信
 
 frontend(ブラウザなどでアクセス)`http://localhost:3000`
+backend(curlコマンドなどでアクセス)`http://localhost:8080`
 
 ## 終了
 
