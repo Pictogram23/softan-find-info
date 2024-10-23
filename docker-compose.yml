@@ -16,7 +16,26 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    depends_on:
+      - db
     container_name: backend-fastapi
     volumes:
       - ./backend:/usr/src/app/backend
     command: uvicorn main:app --host=0.0.0.0 --port=8080
+  db:
+    image: "postgres:17.0-alpine3.20"
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - TZ
+
+volumes:
+  db:
