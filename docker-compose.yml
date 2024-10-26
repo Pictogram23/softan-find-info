@@ -10,32 +10,35 @@ services:
     volumes:
       - ./frontend:/usr/src/app/frontend
     command: npm run dev
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    container_name: backend-fastapi
-    volumes:
-      - ./backend:/usr/src/app/backend
-    command: uvicorn main:app --host=0.0.0.0 --port=8080
-  db:
+  softan-db:
     image: "postgres:17.0-alpine3.20"
     ports:
       - "5432:5432"
     restart: unless-stopped
     volumes:
-      - db:/var/lib/postgresql/data
+      - softan-db:/var/lib/postgresql/data
       - ./initdb:/docker-entrypoint-initdb.d
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - TZ
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+      - TZ=$TZ
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      - softan-db
+    container_name: backend-fastapi
+    volumes:
+      - ./backend:/usr/src/app/backend
+    environment:
+      - SQL_URL=$SQL_URL
+    command: uvicorn main:app --host=0.0.0.0 --port=8080
 
 volumes:
-  db:
+  softan-db:
