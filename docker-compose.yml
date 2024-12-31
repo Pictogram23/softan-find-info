@@ -1,15 +1,5 @@
 version: "3"
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    container_name: frontend-nextjs
-    volumes:
-      - ./frontend:/usr/src/app/frontend
-    command: npm run dev
   backend:
     build:
       context: ./backend
